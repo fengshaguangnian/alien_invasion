@@ -26,7 +26,8 @@ def check_keydown_events(event,ai_settings,screen,sb,ship,bullets,stats,aliens):
     elif event.key == pygame.K_DOWN:
         #向下移动飞船
         ship.moving_down = True
-    elif event.key == pygame.K_SPACE:
+    elif event.key == pygame.K_SPACE and stats.game_active:
+        #这样可以保证在游戏结束时，按空格键将不能继续发射子弹
         fire_bullet(ai_settings,screen,ship,bullets)
     #游戏运行之后，按q键可以退出
     elif event.key == pygame.K_q:
@@ -265,7 +266,15 @@ def check_high_score(stats,sb):
     '''检查是否诞生了新的最高得分'''
     if stats.score > stats.high_score:
         stats.high_score = stats.score
+        loadfile_high_score(stats)
         sb.prep_high_score()
+
+def loadfile_high_score(stats):
+    '''将最高得分写入文件中'''
+    path = 'images/high_score_loadfile.txt'
+    #这里用（path，“w+”），因为可以读写，并且对以前的文件进行清空，如果不清空的话要用r+
+    with open(path,"w+") as file:
+        file.write(str(stats.high_score))
 
 def update_aliens(ai_settings,stats,screen,sb,ship,aliens,bullets):
     '''检查是否有外星人位于屏幕边缘，并更新外星人群中所有外星人的位置'''

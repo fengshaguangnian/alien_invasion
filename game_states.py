@@ -11,7 +11,9 @@ class GameStates():
         #游戏刚启动时处于非活动状态
         self.game_active = False
         #在任何情况下都不重置最高得分
+        #self.high_score = int(self.loadfile_high_score())
         self.high_score = 0
+        self.loadfile_high_score()
 
     # 不要在__init__()之外初始化统计信息，不然重启游戏，这个值也会保持在上一次游戏终结时的值
     # 在这个游戏运行期间，我们只创建一个GameStats实例，但每当玩家开始新游戏时，需要重置一些统计信息。
@@ -24,3 +26,10 @@ class GameStates():
         self.ships_left = self.aisettings.ship_limit
         self.score = 0
         self.level = 1
+
+    def loadfile_high_score(self):
+        path = 'images/high_score_loadfile.txt'
+        #此处不能用（path,"w+"）,不然会清空原文件
+        with open(path,"r") as file:
+            self.high_score  = int(file.read())
+
